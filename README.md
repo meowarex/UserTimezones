@@ -4,6 +4,8 @@ lets you set Custom Timezones for users...
 
 Shows User Timezones, Next to Messages and Current Time in Profile
 
+### [Images <33](https://github.com/meowarex/UserTimezones/tree/main/Images)
+
 ### Usage
 
 - Install the Plugin
@@ -12,6 +14,11 @@ Shows User Timezones, Next to Messages and Current Time in Profile
 - Click "Set Timezone"
 - Select the Appropriate Timezone
 - Done <3
+
+### Batteries *(not inlcuded)*
+`npm`,
+`pnpm` & 
+`git`
 
 ## Installation
 1. Clone the `Vencord` Repo
@@ -31,6 +38,9 @@ Shows User Timezones, Next to Messages and Current Time in Profile
      ```
    - ```Bash
      npm install -g pnpm
+     ```
+   - ```Bash
+     pnpm install --frozen-lockfile
      ```
    - ```Bash
      pnpm build
