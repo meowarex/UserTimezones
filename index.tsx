@@ -1,6 +1,6 @@
 /*
  * Vencord, a Discord client mod
- * Copyright (c) 2023 Vendicated and contributors
+ * Copyright (c) 2024 Vendicated and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -26,7 +26,7 @@ export let timezones: Record<string, string | null> = {};
     timezones = await DataStore.get<Record<string, string>>(DATASTORE_KEY) || {};
 })();
 
-const classes = findByPropsLazy("timestamp", "compact", "content");
+const classes = findByPropsLazy("timestamp", "compact", "contentOnly");
 
 export const settings = definePluginSettings({
     "24h Time": {
@@ -124,22 +124,29 @@ const TimestampComponent = ErrorBoundary.wrap(({ userId, timestamp, type }: Prop
 
 
 export default definePlugin({
-    name: "UserTimezones",
-    authors: [Devs.HolographicYMGL],
+    name: "UserTimezone",
+    // Am no longer included in the vencord team, so i'm not included in the Official Authors list <3
+    authors: [{
+        name: "meowarex",
+        id: 758940316732096542n
+    }],
     description: "Shows User Timezones, Next to Messages and Current Time in Profile",
 
     patches: [
+        // thanks ViewIcons <3
         {
-            find: ".getUserBannerStyles)",
+            find: 'backgroundColor:"COMPLETE"',
             replacement: {
-                match: /getUserBannerStyles.{1,500}children:\[/,
+                // probably bad
+                match: /(?<="foreignObject",.+?)children:\[/,
                 replace: "$&$self.renderProfileTimezone(arguments[0]),"
             }
         },
         {
-            find: ".badgesContainer,",
+            find: '"Message Username"',
             replacement: {
-                match: /id:\(0,\i\.getMessageTimestampId\)\(\i\),timestamp.{1,50}}\),/,
+                // thanks Discord API Updates!!!!
+                match: /(?<=isVisibleOnlyOnHover.+?)id:.{1,11},timestamp.{1,50}}\),/,
                 replace: "$&,$self.renderMessageTimezone(arguments[0]),"
             }
         }
@@ -178,7 +185,9 @@ export default definePlugin({
 });
 
 
-const userContextMenuPatch: NavContextMenuPatchCallback = (children, { user }: { user: User; }) => () => {
+const userContextMenuPatch: NavContextMenuPatchCallback = (children, { user }: { user: User; }) => {
+    if (user?.id == null) return;
+
     const setTimezoneItem = (
         <Menu.MenuItem
             label="Set Timezone"
